@@ -3,6 +3,7 @@ package chess.controller;
 import chess.service.ChessService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -43,10 +44,42 @@ class ChessControllerTest {
     }
 
     @Test
+    void postLogin() throws Exception {
+        Mockito.when(chessService.validateUser("test", "test")).thenReturn(true);
+        mockMvc.perform(post("/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"id\" : \"" + "test" + "\"" + ", " +
+                        "\"password\" : \"" + "test" + "\"" +
+                        "}"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void postLoginFail() throws Exception {
+        Mockito.when(chessService.validateUser("test", "test")).thenReturn(false);
+        mockMvc.perform(post("/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"id\" : \"" + "test" + "\"" + ", " +
+                        "\"password\" : \"" + "test" + "\"" +
+                        "}"))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
     @DisplayName("POST: /login에 제대로 정보를 넘기지 않으면, 오류를 발생시킨다.")
     void postLoginException() throws Exception {
         mockMvc.perform(post("/login"))
                 .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void postLogout() throws Exception {
+        mockMvc.perform(post("/logout")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"id\" : \"" + "test" + "\"" + ", " +
+                        "\"password\" : \"" + "test" + "\"" +
+                        "}"))
+                .andExpect(status().isOk());
     }
 
     private MockHttpSession makeTestSession() {
