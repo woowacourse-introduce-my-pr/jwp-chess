@@ -1,6 +1,8 @@
 # jwp-chess
 체스 게임 구현을 위한 저장소
 
+## PR Test를 위한 README 작성
+
 ## Commit convention
 - 커밋 메시지 언어 : 한글
 - feat : 기능 추가.
